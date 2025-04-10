@@ -2,6 +2,8 @@ import streamlit as st
 import requests
 from bs4 import BeautifulSoup
 
+# Voeg hier je scraper functies in
+
 def scrape_gamma(ean):
     zoek_url = f"https://www.gamma.nl/assortiment?q={ean}"
     response = requests.get(zoek_url)
@@ -12,8 +14,7 @@ def scrape_gamma(ean):
         prijs = product.find('span', class_='price').get_text(strip=True).replace('€', '').replace(',', '.')
         link = "https://www.gamma.nl" + product.find('a')['href']
         return [{"naam": naam, "prijs": float(prijs), "link": link}]
-    else:
-        return []
+    return []
 def scrape_praxis(ean):
     zoek_url = f"https://www.praxis.nl/zoek?q={ean}"
     response = requests.get(zoek_url)
@@ -118,39 +119,38 @@ def scrape_verfwinkel(ean):
         return [{"naam": naam, "prijs": float(prijs), "link": link}]
     else:
         return []
-ean = st.text_input("Voer het EAN-nummer in")
 
-if ean:
-    resultaten = []
-    resultaten += scrape_gamma(ean)
-    resultaten += scrape_praxis(ean)
-    resultaten += scrape_bouwmaat(ean)
-    resultaten += scrape_karwei(ean)
-    resultaten += scrape_hornbach(ean)
-    resultaten += scrape_gereedschapcentrum(ean)
-    resultaten += scrape_toolnation(ean)
-    resultaten += scrape_toolstation(ean)
-    resultaten += scrape_verfwinkel(ean)
+# Streamlit gebruikersinterface
+def main():
+    st.title("EAN Prijschecker")
 
-    # Sorteer de resultaten op prijs en toon de top 3
-    resultaten.sort(key=lambda x: x['prijs'])
-    resultaten = resultaten[:3]
+    # Vraag de gebruiker om het EAN-nummer in te voeren
+    ean = st.text_input("Voer het EAN-nummer in:")
 
-    # Toon de top 3 in je app
-    for i, item in enumerate(resultaten, start=1):
-        st.markdown(f"**{i}. {item['naam']}**")
-        st.markdown(f"💰 Prijs: €{item['prijs']:.2f}")
-        st.markdown(f"[🔗 Naar webshop]({item['link']})")
+    if ean:
+        resultaten = []
+        
+        # Roep je scrapers aan
+        resultaten += scrape_gamma(ean)
+        # Voeg andere scrapers toe, zoals scrape_praxis(ean), enzovoort
+        
+        # Als er resultaten zijn, toon ze
+        if len(resultaten) > 0:
+            # Sorteer de resultaten op prijs
+            resultaten.sort(key=lambda x: x['prijs'])
+            
+            # Toon de top 3 resultaten
+            for i, item in enumerate(resultaten[:3], start=1):
+                st.markdown(f"**{i}. {item['naam']}**")
+                st.markdown(f"💰 Prijs: €{item['prijs']:.2f}")
+                st.markdown(f"[🔗 Naar webshop]({item['link']})")
+        else:
+            st.write("Geen producten gevonden met dit EAN-nummer.")
+    
+# Start de app
+if __name__ == "__main__":
+    main()
 
 
-st.title("🔎 EAN Prijschecker")
 
-ean = st.text_input("Voer het EAN-nummer in:", "")
 
-if ean:
-    st.subheader("Top 3 goedkoopste opties:")
-    for i, item in enumerate(demo_resultaten, start=1):
-        st.markdown(f"**{i}. {item['naam']}**")
-        st.markdown(f"💰 Prijs: €{item['prijs']:.2f}")
-        st.markdown(f"[🔗 Naar webshop]({item['link']})")
-        st.markdown("---")
