@@ -142,12 +142,6 @@ if ean:
         st.markdown(f"💰 Prijs: €{item['prijs']:.2f}")
         st.markdown(f"[🔗 Naar webshop]({item['link']})")
 
-# Demo-data (later vervangen we dit met live scraping)
-demo_resultaten = [
-    {"naam": "Product A", "prijs": 84.99, "link": "https://voorbeeldwinkel1.nl"},
-    {"naam": "Product B", "prijs": 87.00, "link": "https://voorbeeldwinkel2.nl"},
-    {"naam": "Product C", "prijs": 89.99, "link": "https://voorbeeldwinkel3.nl"},
-]
 
 st.title("🔎 EAN Prijschecker")
 
