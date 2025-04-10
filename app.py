@@ -1,3 +1,4 @@
+import streamlit as st
 import requests
 from bs4 import BeautifulSoup
 
@@ -140,7 +141,6 @@ if ean:
         st.markdown(f"**{i}. {item['naam']}**")
         st.markdown(f"💰 Prijs: €{item['prijs']:.2f}")
         st.markdown(f"[🔗 Naar webshop]({item['link']})")
-import streamlit as st
 
 # Demo-data (later vervangen we dit met live scraping)
 demo_resultaten = [
